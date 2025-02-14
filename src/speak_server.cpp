@@ -3,14 +3,10 @@
 
 using namespace std::chrono_literals;
 
-SpeakServer::SpeakServer(const rclcpp::NodeOptions &options) : Node("speak_server", options)
+waypoint_function::SpeakServer::SpeakServer(const rclcpp::NodeOptions &options) : Node("speak_server", options)
 {
     // Publisher to send talk msg
     voicevox_pub_=create_publisher<voicevox_ros2_msgs::msg::Talk>("voicevox_ros2", rclcpp::QoS(10));
-
-    // Subscriber to update when waypoint updated
-    update_sub_ = create_subscription<example_interfaces::msg::Empty>("server_update", 1,
-        bind(&SpeakServer::Update, this, std::placeholders::_1));
     
     // Create Server
     server_ = create_service<waypoint_function_msgs::srv::Command>(
@@ -24,13 +20,7 @@ SpeakServer::SpeakServer(const rclcpp::NodeOptions &options) : Node("speak_serve
     ServerApply();
 }
 
-void SpeakServer::Update(const example_interfaces::msg::Empty::SharedPtr msg)
-{
-    RCLCPP_INFO(get_logger(), "SpeakServer Server Update.");
-    /* write upate code when waypoint updated */
-}
-
-void SpeakServer::Callback(const std::shared_ptr<waypoint_function_msgs::srv::Command::Request> request, std::shared_ptr<waypoint_function_msgs::srv::Command::Response> response)
+void waypoint_function::SpeakServer::Callback(const std::shared_ptr<waypoint_function_msgs::srv::Command::Request> request, std::shared_ptr<waypoint_function_msgs::srv::Command::Response> response)
 {
     RCLCPP_INFO(get_logger(), "SpeakServer Server Called.");
 
@@ -47,7 +37,7 @@ void SpeakServer::Callback(const std::shared_ptr<waypoint_function_msgs::srv::Co
     response->message = SERVER_NAME + ":" + result_msg;
 }
 
-void SpeakServer::ServerApply()
+void waypoint_function::SpeakServer::ServerApply()
 {
     // Execute Server Apply
     while (!apply_client_->wait_for_service(1s)) {
@@ -77,4 +67,4 @@ void SpeakServer::ServerApply()
 }
 
 #include <rclcpp_components/register_node_macro.hpp>
-RCLCPP_COMPONENTS_REGISTER_NODE(SpeakServer)
+RCLCPP_COMPONENTS_REGISTER_NODE(waypoint_function::SpeakServer)

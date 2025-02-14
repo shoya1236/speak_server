@@ -14,7 +14,7 @@ ament_auto_add_library(${PROJECT_NAME} SHARED
 )
 
 rclcpp_components_register_node(${PROJECT_NAME}
-  PLUGIN "SpeakServer"
+  PLUGIN "waypoint_function::SpeakServer"
   EXECUTABLE speak_server_node
 )
 
